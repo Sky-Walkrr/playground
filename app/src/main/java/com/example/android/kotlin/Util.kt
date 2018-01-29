@@ -2,7 +2,9 @@ package com.example.android.kotlin
 
 import android.content.Context
 import android.support.design.widget.Snackbar
+import android.util.Patterns
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import java.io.Closeable
 import java.io.IOException
@@ -32,6 +34,14 @@ class Util {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+
+        val isNotEmpty: (EditText) -> Boolean = {
+            !it.text.isNullOrEmpty()
+        }
+
+        val isMatchEmail: (EditText) -> Boolean = {
+            Patterns.EMAIL_ADDRESS.matcher(it.text).matches()
         }
     }
 

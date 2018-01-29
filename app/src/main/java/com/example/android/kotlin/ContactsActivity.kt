@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -56,15 +55,20 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
         }
         //or
 //        val isEmailValid = mEmailEdit.text.matches(Regex(Patterns.EMAIL_ADDRESS.pattern()))
-        val validDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pass)
-        val invalidDrawable = ContextCompat.getDrawable(this, R.drawable.ic_fail)
-        mFirstNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                if (isNotEmpty(mFirstNameEdit)) validDrawable else invalidDrawable, null)
-        mLastNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                if (isNotEmpty(mLastNameEdit)) validDrawable else invalidDrawable, null)
-        mEmailEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                if (isMatchEmail(mEmailEdit)) validDrawable else invalidDrawable, null)
-        mEntryValid = isNotEmpty(mFirstNameEdit) and isNotEmpty(mLastNameEdit) and isMatchEmail(mEmailEdit)
+//        val validDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pass)
+//        val invalidDrawable = ContextCompat.getDrawable(this, R.drawable.ic_fail)
+//        mFirstNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
+//                if (isNotEmpty(mFirstNameEdit)) validDrawable else invalidDrawable, null)
+//        mLastNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
+//                if (isNotEmpty(mLastNameEdit)) validDrawable else invalidDrawable, null)
+//        mEmailEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
+//                if (isMatchEmail(mEmailEdit)) validDrawable else invalidDrawable, null)
+//        mEntryValid = isNotEmpty(mFirstNameEdit) and isNotEmpty(mLastNameEdit) and isMatchEmail(mEmailEdit)
+
+        //Extension～～∠( ᐛ 」∠)＿
+        mEntryValid = mFirstNameEdit.validate { isNotEmpty(this) } and
+                mLastNameEdit.validate { isNotEmpty(this) } and
+                mEmailEdit.validate { isMatchEmail(this) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
