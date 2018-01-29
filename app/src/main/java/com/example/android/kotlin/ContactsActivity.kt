@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -12,7 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +19,8 @@ import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_contacts.*
+import kotlinx.android.synthetic.main.input_contact_dialog.view.*
 import java.io.IOException
 
 /**
@@ -41,9 +41,7 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
-        val toolBar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolBar)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        setSupportActionBar(toolbar)
         fab.setOnClickListener({ showAddDialog(-1) })
         setupRV()
     }
@@ -125,9 +123,9 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
     @SuppressWarnings("InflateParams")
     fun showAddDialog(contactPos: Int) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.input_contact_dialog, null)
-        mFirstNameEdit = dialogView.findViewById(R.id.edittext_firstname)
-        mLastNameEdit = dialogView.findViewById(R.id.edittext_lastname)
-        mEmailEdit = dialogView.findViewById(R.id.edittext_email)
+        mFirstNameEdit = dialogView.edittext_firstname
+        mLastNameEdit = dialogView.edittext_lastname
+        mEmailEdit = dialogView.edittext_email
 
         mFirstNameEdit.addTextChangedListener(this)
         mLastNameEdit.addTextChangedListener(this)
