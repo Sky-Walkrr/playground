@@ -47,20 +47,24 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
     }
 
     override fun afterTextChanged(s: Editable?) {
-        val isFirstNameValid = !mFirstNameEdit.text.isNullOrEmpty()
-        val isLastNameValid = !mLastNameEdit.text.isNullOrEmpty()
-        val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(mEmailEdit.text).matches()
+        val isNotEmpty: (EditText) -> Boolean = {
+            !it.text.isNullOrEmpty()
+        }
+
+        val isMatchEmail: (EditText) -> Boolean = {
+            Patterns.EMAIL_ADDRESS.matcher(it.text).matches()
+        }
         //or
 //        val isEmailValid = mEmailEdit.text.matches(Regex(Patterns.EMAIL_ADDRESS.pattern()))
         val validDrawable = ContextCompat.getDrawable(this, R.drawable.ic_pass)
         val invalidDrawable = ContextCompat.getDrawable(this, R.drawable.ic_fail)
         mFirstNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                if (isFirstNameValid) validDrawable else invalidDrawable, null)
+                if (isNotEmpty(mFirstNameEdit)) validDrawable else invalidDrawable, null)
         mLastNameEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                if (isLastNameValid) validDrawable else invalidDrawable, null)
+                if (isNotEmpty(mLastNameEdit)) validDrawable else invalidDrawable, null)
         mEmailEdit.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                if (isEmailValid) validDrawable else invalidDrawable, null)
-        mEntryValid = isFirstNameValid && isLastNameValid && isEmailValid
+                if (isMatchEmail(mEmailEdit)) validDrawable else invalidDrawable, null)
+        mEntryValid = isNotEmpty(mFirstNameEdit) and isNotEmpty(mLastNameEdit) and isMatchEmail(mEmailEdit)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -76,6 +80,22 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
             }
             R.id.action_generate -> {
                 genContacts()
+                return true
+            }
+            R.id.action_sort_by_first_name -> {
+                mContacts.sortBy {
+                    it.firstName
+                }
+                saveContact()
+                mAdapter.notifyDataSetChanged()
+                return true
+            }
+            R.id.action_sort_by_last_name -> {
+                mContacts.sortBy {
+                    it.lastName
+                }
+                saveContact()
+                mAdapter.notifyDataSetChanged()
                 return true
             }
         }
@@ -200,11 +220,16 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
 
     private fun loadContacts(): ArrayList<Contact> {
         val set = mPrefs.getStringSet(CONTACT_KEY, HashSet<String>())
+
+        //mapTo
         val list = ArrayList<Contact>()
-        set.map {
-            list.add(GsonUtilLazy.instance.fromJson(it, Contact::class.java))
-        }
-        return list
+        return set.mapTo(list, {
+            GsonUtilLazy.instance.fromJson(it, Contact::class.java)
+        })
+//        set.map {
+//            list.add(GsonUtilLazy.instance.fromJson(it, Contact::class.java))
+//        }
+//        return list
     }
 
     private fun saveContact() {
@@ -214,9 +239,13 @@ class ContactsActivity : AppCompatActivity(), TextWatcher {
 //        for (c in mContacts) {
 //            set.add(GsonUtilHungry.getInstance().toJson(c))
 //        }
-        mContacts.map {
-            set.add(GsonUtilLazy.instance.toJson(it))
-        }
+
+        mContacts.mapTo(set, {
+            GsonUtilLazy.instance.toJson(it)
+        })
+//        mContacts.map {
+//            set.add(GsonUtilLazy.instance.toJson(it))
+//        }
         editor.putStringSet(CONTACT_KEY, set)
         editor.apply()
     }

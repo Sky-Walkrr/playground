@@ -27,4 +27,16 @@
         android:orderInCategory="100"
         android:title="@string/action_generate"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sort_by_first_name"
+        android:orderInCategory="100"
+        android:title="@string/action_sort_by_first_name"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sort_by_last_name"
+        android:orderInCategory="100"
+        android:title="@string/action_sort_by_last_name"
+        app:showAsAction="never" />
 </menu>
